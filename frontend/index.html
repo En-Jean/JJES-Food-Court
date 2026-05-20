@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#FFC107" />
+    <title>JJES Food Court</title>
+    
+    <!-- Preconnect for faster loading -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/auth.css" />
+    
+    <!-- Critical CSS (Prevents FOUC) -->
+    <style>
+        .section{display:none}.section.active{display:block}
+        #cartContent{display:none}#cartContent.visible{display:block}
+        .hidden{display:none!important}
+        @media screen and (max-width:768px){input,select,textarea{font-size:16px!important}}
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+    <div class="nav-brand">
+        <span class="brand-icon">🍔</span>
+        <span class="brand-text">JJES <span class="brand-accent">Food Court</span></span>
+    </div>
+    <div class="nav-links" id="navLinks">
+        <a href="#" class="nav-link" onclick="showSection('menuSection');return false">
+            <i class="fas fa-utensils"></i> Menu
+        </a>
+        <a href="#" class="nav-link" onclick="showSection('ordersSection');return false">
+            <i class="fas fa-receipt"></i> Orders
+        </a>
+        <a href="#" class="nav-link cart-nav-btn" onclick="showSection('cartSection');return false">
+            <i class="fas fa-shopping-cart"></i> Cart
+            <span class="cart-badge" id="cartBadge">0</span>
+        </a>
+        <button class="btn-logout" id="logoutBtn" onclick="handleLogout();return false">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+    </div>
+    <div class="user-greeting" id="userGreeting"></div>
+</nav>
+
+<!-- LANDING SECTION - FULL SCREEN -->
+<section id="landingSection" class="section active">
+    <div class="hero-container">        
+        <div class="hero-content">
+            <div class="hero-badge">🔥 Fresh & Hot Every Day</div>
+            <h1 class="hero-title">Craving Something <br/><span class="hero-highlight">Delicious?</span></h1>
+            <p class="hero-subtitle">Welcome to <strong>JJES Food Court</strong> — your go-to spot for amazing food, fast service, and unforgettable flavors. Order dine-in or delivery!</p>
+            <div class="hero-buttons">
+                <button class="btn-primary btn-large" onclick="showSection('loginSection');return false">
+                    <i class="fas fa-utensils"></i> Order Now
+                </button>
+                <button class="btn-outline btn-large" onclick="showSection('menuSection');return false">
+                    <i class="fas fa-book-open"></i> View Menu
+                </button>
+            </div>
+            <div class="hero-stats">
+                <div class="stat-item"><span class="stat-number">20+</span><span class="stat-label">Menu Items</span></div>
+                <div class="stat-divider"></div>
+                <div class="stat-item"><span class="stat-number">8</span><span class="stat-label">Categories</span></div>
+                <div class="stat-divider"></div>
+                <div class="stat-item"><span class="stat-number">Fast</span><span class="stat-label">Delivery</span></div>
+            </div>
+        </div>
+        <div class="hero-image-wrap">
+            <div class="hero-food-emoji">
+                <div class="food-float f1">🍗</div>
+                <div class="food-float f2">🍔</div>
+                <div class="food-float f3">🍝</div>
+                <div class="food-float f4">🍟</div>
+                <div class="food-float f5">🥤</div>
+                <div class="food-float f6">🧅</div>
+                <div class="hero-plate">🍽️</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- LOGIN SECTION -->
+<section id="loginSection" class="section">
+    <div class="auth-wrapper">
+        <div class="auth-container">
+            <div class="auth-branding">
+                <div class="branding-content">
+                    <div class="brand-logo-large">🍔</div>
+                    <h1>JJES Food Court</h1>
+                    <p>Delicious food delivered fast</p>
+                    <div class="features-list">
+                        <div class="feature-item"><i class="fas fa-check-circle"></i><span>Fast & Fresh</span></div>
+                        <div class="feature-item"><i class="fas fa-check-circle"></i><span>Easy Ordering</span></div>
+                        <div class="feature-item"><i class="fas fa-check-circle"></i><span>Secure Payment</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="auth-form-wrapper">
+                <div class="auth-card">
+                    <div class="auth-header">
+                        <div class="auth-icon">🔐</div>
+                        <h2>Welcome Back!</h2>
+                        <p>Log in to place your order</p>
+                    </div>
+                    <div id="loginAlert" class="alert hidden"></div>
+                    <form id="loginForm" onsubmit="handleLogin();return false">
+                        <div class="form-group">
+                            <label for="loginEmail"><i class="fas fa-envelope"></i> Email</label>
+                            <input type="email" id="loginEmail" placeholder="your@email.com" autocomplete="email" required class="form-input" />
+                        </div>
+                        <div class="form-group">
+                            <label for="loginPassword"><i class="fas fa-lock"></i> Password</label>
+                            <div class="input-password-wrap">
+                                <input type="password" id="loginPassword" placeholder="Enter password" autocomplete="current-password" required class="form-input" />
+                                <button class="toggle-password" onclick="togglePassword('loginPassword',this);return false" type="button">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="form-options">
+                            <label class="remember-me"><input type="checkbox" id="rememberMe"><span>Remember me</span></label>
+                            <a href="#" class="forgot-password">Forgot?</a>
+                        </div>
+                        <button class="btn-primary btn-block btn-login" id="loginBtn" type="submit">
+                            <span class="btn-text"><i class="fas fa-sign-in-alt"></i> Log In</span>
+                            <span class="btn-loading hidden"><i class="fas fa-circle-notch fa-spin"></i> Logging in...</span>
+                        </button>
+                    </form>
+                    <div class="auth-divider"><span>or</span></div>
+                    <p class="auth-switch">New here? <a href="#" onclick="showSection('signupSection');return false" class="link-primary">Create account</a></p>
+                    <p class="auth-switch"><a href="#" onclick="showSection('menuSection');return false" class="link-secondary"><i class="fas fa-arrow-left"></i> Browse as Guest</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SIGNUP SECTION -->
+<section id="signupSection" class="section">    
+    <div class="auth-wrapper">
+        <div class="auth-container">
+            <div class="auth-branding">
+                <div class="branding-content">
+                    <div class="brand-logo-large">📝</div>
+                    <h1>Join JJES Today!</h1>
+                    <p>Create account in seconds</p>
+                    <div class="features-list">
+                        <div class="feature-item"><i class="fas fa-bolt"></i><span>Quick Signup</span></div>
+                        <div class="feature-item"><i class="fas fa-gift"></i><span>Exclusive Deals</span></div>
+                        <div class="feature-item"><i class="fas fa-history"></i><span>Order History</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="auth-form-wrapper">
+                <div class="auth-card">
+                    <div class="auth-header">
+                        <div class="auth-icon">✨</div>
+                        <h2>Create Account</h2>
+                        <p>Join JJES Food Court today!</p>
+                    </div>
+                    <div id="signupAlert" class="alert hidden"></div>
+                    <form id="signupForm" onsubmit="handleRegister();return false">
+                        <div class="form-group">
+                            <label for="signupName"><i class="fas fa-user"></i> Full Name</label>
+                            <input type="text" id="signupName" placeholder="Juan Dela Cruz" required class="form-input" />
+                        </div>
+                        <div class="form-group">
+                            <label for="signupEmail"><i class="fas fa-envelope"></i> Email</label>
+                            <input type="email" id="signupEmail" placeholder="your@email.com" required class="form-input" />
+                        </div>
+                        <div class="form-group">
+                            <label for="signupPassword"><i class="fas fa-lock"></i> Password</label>
+                            <div class="input-password-wrap">
+                                <input type="password" id="signupPassword" placeholder="Min 6 characters" minlength="6" required class="form-input" />
+                                <button class="toggle-password" onclick="togglePassword('signupPassword',this);return false" type="button">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="signupContact"><i class="fas fa-phone"></i> Contact</label>
+                            <input type="tel" id="signupContact" placeholder="09123456789" pattern="[0-9]{11}" required class="form-input" />
+                        </div>
+                        <button class="btn-primary btn-block" id="signupBtn" type="submit">
+                            <span class="btn-text"><i class="fas fa-user-plus"></i> Create Account</span>
+                            <span class="btn-loading hidden"><i class="fas fa-circle-notch fa-spin"></i> Creating...</span>
+                        </button>
+                    </form>
+                    <div class="auth-divider"><span>or</span></div>
+                    <p class="auth-switch">Have account? <a href="#" onclick="showSection('loginSection');return false" class="link-primary">Log in</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- MENU SECTION -->
+<section id="menuSection" class="section">    
+    <div class="section-container">
+        <div class="section-header">
+            <h2 class="section-title">🍽️ Our Menu</h2>
+            <p class="section-subtitle">Fresh, delicious, made for you</p>
+        </div>
+        <div class="category-filters" id="categoryFilters">
+            <button class="filter-btn active" data-category="All" onclick="filterMenu('All');return false">All</button>
+        </div>
+        <div class="menu-loading" id="menuLoading">
+            <div class="spinner"></div>
+            <p>Loading menu...</p>
+        </div>
+        <div class="menu-grid" id="menuGrid"></div>
+    </div>
+</section>
+
+<!-- CART SECTION -->
+<section id="cartSection" class="section">
+    <div class="section-container">
+        <div class="section-header">
+            <h2 class="section-title">🛒 Your Cart</h2>
+            <p class="section-subtitle">Review before checkout</p>
+        </div>
+        <div class="empty-state" id="emptyCartMsg">
+            <div class="empty-icon">🛒</div>
+            <h3>Cart is empty</h3>
+            <p>Add items from our menu!</p>            
+            <button class="btn-primary" onclick="showSection('menuSection');return false">
+                <i class="fas fa-utensils"></i> Browse Menu
+            </button>
+        </div>
+        <div id="cartContent">
+            <div class="cart-items-list" id="cartItemsContainer"></div>
+            <div class="cart-summary-card">
+                <div class="cart-summary-row"><span>Subtotal</span><span id="cartSubtotal">₱0.00</span></div>
+                <div class="cart-summary-row"><span>Service Fee</span><span>₱10.00</span></div>
+                <div class="cart-summary-row cart-total-row"><strong>Total</strong><strong id="cartTotal">₱0.00</strong></div>
+                <div class="cart-action-buttons">
+                    <button class="btn-outline" onclick="clearCart();return false"><i class="fas fa-trash"></i> Clear</button>
+                    <button class="btn-primary" onclick="proceedToCheckout();return false">Checkout <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CHECKOUT SECTION -->
+<section id="checkoutSection" class="section">
+    <div class="section-container">
+        <div class="section-header">
+            <h2 class="section-title">📋 Checkout</h2>
+            <p class="section-subtitle">Almost there!</p>
+        </div>
+        <div class="checkout-layout">
+            <div class="checkout-form-card">
+                <div id="checkoutAlert" class="alert hidden"></div>
+                
+                <div class="order-type-toggle">
+                    <button class="toggle-btn active" id="dineInBtn" onclick="setOrderType('dine-in');return false"><i class="fas fa-chair"></i> Dine-In</button>
+                    <button class="toggle-btn" id="deliveryBtn" onclick="setOrderType('delivery');return false"><i class="fas fa-motorcycle"></i> Delivery</button>
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-credit-card"></i> Payment Method</label>
+                    <div class="payment-methods">
+                        <!-- 🔧 Cash Option -->
+                        <label class="payment-option">
+                            <input type="radio" name="payment_method" value="cash" checked onchange="togglePaymentDetails('cash')">
+                            <div class="payment-card">
+                                <i class="fas fa-money-bill-wave"></i>
+                                <div><span>Cash (Pickup)</span><small>Pay upon pickup</small></div>
+                            </div>
+                        </label>
+
+                        <!-- 🔧 NEW: Cash on Delivery Option -->
+                        <label class="payment-option">
+                            <input type="radio" name="payment_method" value="cash_on_delivery" onchange="togglePaymentDetails('cash_on_delivery')">
+                            <div class="payment-card">
+                                <i class="fas fa-truck"></i>
+                                <div>
+                                    <span>Cash on Delivery</span>
+                                    <small>Pay rider when food arrives</small>
+                                </div>
+                            </div>
+                        </label>
+
+                        <!-- 🔧 E-Wallet Options -->
+                        <label class="payment-option">
+                            <input type="radio" name="payment_method" value="gcash" onchange="togglePaymentDetails('gcash')">
+                            <div class="payment-card">
+                                <span style="font-weight:700;color:#0061ff">GCash</span>
+                                <div><span>GCash</span><small>Pay via app</small></div>
+                            </div>
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="payment_method" value="maya" onchange="togglePaymentDetails('maya')">
+                            <div class="payment-card">
+                                <span style="font-weight:700;color:#fe005e">Maya</span>
+                                <div><span>Maya</span><small>Pay via app</small></div>
+                            </div>
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="payment_method" value="bank_transfer" onchange="togglePaymentDetails('bank_transfer')">
+                            <div class="payment-card">
+                                <i class="fas fa-university"></i>
+                                <div><span>Bank Transfer</span><small>BDO/BPI</small></div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 🔧 Payment Details Display Box -->
+                <div id="paymentDetails" class="payment-details-box">
+                    <!-- Cash Details -->
+                    <div id="cashDetails" class="payment-detail active">
+                        <div class="alert alert-info"><i class="fas fa-info-circle"></i> <strong>Cash (Pickup):</strong> Pay upon pickup/delivery.</div>
+                    </div>
+
+                    <!-- 🔧 NEW: COD Details -->
+                    <div id="cash_on_deliveryDetails" class="payment-detail hidden">
+                        <div class="alert alert-success">
+                            <i class="fas fa-truck"></i> <strong>Cash on Delivery:</strong> 
+                            Please prepare the exact amount for the rider.
+                        </div>
+                    </div>
+
+                    <!-- GCash Details -->
+                    <div id="gcashDetails" class="payment-detail hidden">
+                        <div class="alert alert-warning"><i class="fas fa-qrcode"></i> <strong>GCash:</strong> Pay via GCash app after order.</div>
+                        <div class="form-group">
+                            <label>GCash Reference (Optional)</label>
+                            <input type="text" id="gcashRef" placeholder="e.g. 1234567890" maxlength="20" class="form-input">
+                        </div>
+                    </div>
+
+                    <!-- Maya Details -->
+                    <div id="mayaDetails" class="payment-detail hidden">
+                        <div class="alert alert-warning"><i class="fas fa-mobile-alt"></i> <strong>Maya:</strong> Pay via Maya app after order.</div>
+                        <div class="form-group">
+                            <label>Maya Reference (Optional)</label>
+                            <input type="text" id="mayaRef" placeholder="e.g. MAYA-987654" maxlength="30" class="form-input">
+                        </div>
+                    </div>
+
+                    <!-- Bank Transfer Details -->
+                    <div id="bankTransferDetails" class="payment-detail hidden">
+                        <div class="alert alert-warning">
+                            <i class="fas fa-university"></i> <strong>Bank Transfer:</strong><br>
+                            BDO: 1234-5678-9012 • BPI: 9876-5432-1098<br>
+                            <small>⚠️ Confirmed after verification (15-30 mins)</small>
+                        </div>
+                        <div class="form-group">
+                            <label>Transaction Reference</label>
+                            <input type="text" id="bankRef" placeholder="e.g. BDO-20240520-ABC" class="form-input">
+                        </div>
+                    </div>
+                </div>
+                
+                <form id="checkoutForm" onsubmit="handlePlaceOrder();return false">
+                    <div class="form-group">
+                        <label><i class="fas fa-user"></i> Full Name</label>
+                        <input type="text" id="checkoutName" placeholder="Your name" required class="form-input" />
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-phone"></i> Contact Number</label>
+                        <input type="tel" id="checkoutContact" placeholder="09123456789" required class="form-input" />
+                    </div>
+                    <div class="form-group" id="tableField">
+                        <label><i class="fas fa-chair"></i> Table Number</label>
+                        <input type="text" id="checkoutTable" placeholder="e.g. Table 5" class="form-input" />
+                    </div>
+                    <div class="form-group hidden" id="addressField">
+                        <label><i class="fas fa-map-marker-alt"></i> Delivery Address</label>
+                        <textarea id="checkoutAddress" rows="3" placeholder="Full address" class="form-input"></textarea>
+                    </div>
+                    <button class="btn-primary btn-block" id="placeOrderBtn" type="submit">
+                        <span class="btn-text"><i class="fas fa-check-circle"></i> Place Order</span>
+                        <span class="btn-loading hidden"><i class="fas fa-circle-notch fa-spin"></i> Processing...</span>
+                    </button>
+                </form>
+            </div>
+            
+            <div class="order-summary-card">
+                <h3>Order Summary</h3>
+                <div id="checkoutItemsList" class="checkout-items-list"></div>
+                <div class="checkout-total"><span>Total</span><strong id="checkoutTotal">₱0.00</strong></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CONFIRMATION SECTION -->
+<section id="confirmationSection" class="section">
+    <div class="section-container centered-content">
+        <div class="confirmation-card">
+            <div class="confirmation-icon">✅</div>
+            <h2>Order Placed!</h2>
+            <p class="confirmation-subtitle">Your order is being prepared.</p>
+            <div class="order-id-badge">Order #<span id="confirmedOrderId">---</span></div>
+            <div class="confirmation-details" id="confirmationDetails"></div>
+            <div class="confirmation-buttons">
+                <button class="btn-primary" onclick="showSection('ordersSection');return false"><i class="fas fa-receipt"></i> Track Orders</button>
+                <button class="btn-outline" onclick="orderAgain();return false"><i class="fas fa-utensils"></i> Order Again</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ORDERS SECTION -->
+<section id="ordersSection" class="section">
+    <div class="section-container">
+        <div class="section-header">
+            <h2 class="section-title">📜 My Orders</h2>
+            <p class="section-subtitle">Your order history</p>
+        </div>
+        <div class="empty-state hidden" id="ordersLoginMsg">
+            <div class="empty-icon">🔐</div>
+            <h3>Log in to see orders</h3>
+            <button class="btn-primary" onclick="showSection('loginSection');return false"><i class="fas fa-sign-in-alt"></i> Log In</button>
+        </div>
+        <div class="menu-loading hidden" id="ordersLoading">
+            <div class="spinner"></div>
+            <p>Loading orders...</p>
+        </div>
+        <div class="empty-state hidden" id="noOrdersMsg">
+            <div class="empty-icon">📭</div>
+            <h3>No orders yet</h3>
+            <p>Start by ordering something!</p>
+            <button class="btn-primary" onclick="showSection('menuSection');return false"><i class="fas fa-utensils"></i> Browse Menu</button>
+        </div>
+        <div id="ordersList" class="orders-list"></div>
+    </div>
+</section>
+
+<!-- TOAST -->
+<div class="toast" id="toastNotification"></div>
+
+<!-- JAVASCRIPT -->
+<script src="js/main.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Test - JJES Food Court</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+        h2 {
+            color: #555;
+            margin: 30px 0 15px;
+            font-size: 1.3rem;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+        }
+        .btn {
+            background: linear-gradient(135deg, #FFC107 0%, #e5a800 100%);
+            color: #111;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin: 10px 0;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255,193,7,0.4);
+        }
+        .btn:active {
+            transform: translateY(0);
+        }
+        #result {
+            margin-top: 25px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            border-left: 4px solid #dee2e6;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .success {
+            color: #155724;
+            background: #d4edda;
+            border-left-color: #28a745;
+        }
+        .error {
+            color: #721c24;
+            background: #f8d7da;
+            border-left-color: #dc3545;
+        }
+        .info {
+            color: #0c5460;
+            background: #d1ecf1;
+            border-left-color: #17a2b8;
+        }
+        .loading {
+            color: #856404;
+            background: #fff3cd;
+            border-left-color: #ffc107;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 API Test Tool</h1>
+        <p style="color: #666; margin-bottom: 30px;">Test your JJES Food Court backend APIs</p>
+        
+        <h2>Test 1: Basic Connection</h2>
+        <button class="btn" onclick="testBasic()">Test test_order.php</button>
+        
+        <h2>Test 2: Place Order Simulation</h2>
+        <button class="btn" onclick="testPlaceOrder()">Test place_order.php</button>
+        
+        <h2>Test 3: Get Menu</h2>
+        <button class="btn" onclick="testGetMenu()">Test get_menu.php</button>
+        
+        <div id="result" class="info">Click a button to test the API...</div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost/JJES-FOOD-COURT/backend';
+        
+        function showResult(data, type = 'info') {
+            const el = document.getElementById('result');
+            el.className = type;
+            
+            if (typeof data === 'object') {
+                el.textContent = JSON.stringify(data, null, 2);
+            } else {
+                el.textContent = data;
+            }
+        }
+        
+        async function testBasic() {
+            showResult('Testing basic connection...', 'loading');
+            
+            try {
+                const res = await fetch(`${API_URL}/test_order.php`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({test: 'data'})
+                });
+                
+                const rawText = await res.text();
+                console.log('Raw response:', rawText);
+                
+                try {
+                    const data = JSON.parse(rawText);
+                    showResult(data, 'success');
+                } catch (parseError) {
+                    showResult('❌ Not valid JSON!\n\nRaw response:\n' + rawText.substring(0, 500), 'error');
+                }
+            } catch (e) {
+                showResult('❌ Error: ' + e.message, 'error');
+            }
+        }
+        
+        async function testPlaceOrder() {
+            showResult('Testing place order...', 'loading');
+            
+            try {
+                const res = await fetch(`${API_URL}/place_order.php`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        customer_name: 'Test User',
+                        contact: '09123456789',
+                        order_type: 'dine-in',
+                        table_number: '5',
+                        payment_method: 'cash',
+                        total_price: 150.00,
+                        cart_items: [
+                            {id: 1, name: 'Burger', price: 85, quantity: 1},
+                            {id: 7, name: 'Fries', price: 55, quantity: 1}
+                        ]
+                    })
+                });
+                
+                const rawText = await res.text();
+                console.log('Raw response:', rawText);
+                
+                try {
+                    const data = JSON.parse(rawText);
+                    showResult(data, data.success ? 'success' : 'error');
+                } catch (parseError) {
+                    showResult('❌ Not valid JSON!\n\nRaw response:\n' + rawText.substring(0, 500), 'error');
+                }
+            } catch (e) {
+                showResult('❌ Error: ' + e.message, 'error');
+            }
+        }
+        
+        async function testGetMenu() {
+            showResult('Testing get menu...', 'loading');
+            
+            try {
+                const res = await fetch(`${API_URL}/get_menu.php`);
+                const rawText = await res.text();
+                console.log('Raw response:', rawText);
+                
+                try {
+                    const data = JSON.parse(rawText);
+                    showResult({
+                        success: data.success,
+                        count: data.count,
+                        message: data.count + ' menu items found!'
+                    }, data.success ? 'success' : 'error');
+                } catch (parseError) {
+                    showResult('❌ Not valid JSON!\n\nRaw response:\n' + rawText.substring(0, 500), 'error');
+                }
+            } catch (e) {
+                showResult('❌ Error: ' + e.message, 'error');
+            }
+        }
+    </script>
+</body>
+</html>

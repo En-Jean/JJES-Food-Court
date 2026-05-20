@@ -1,0 +1,14 @@
+# 🔒 Sensitive Files
+backend/db_connect.php
+backend/logs/
+*.log
+.env
+
+# 🖥️ OS & Editor Files
+.DS_Store
+Thumbs.db
+.vscode/
+
+# 📦 Dependencies (if any)
+node_modules/
+vendor/
