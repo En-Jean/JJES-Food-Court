@@ -28,13 +28,20 @@
 </head>
 <body>
 
-<!-- NAVBAR -->
+<!-- 🔧 NAVBAR - UPDATED: Home + Auth Toggle -->
 <nav class="navbar" id="navbar">
     <div class="nav-brand">
         <span class="brand-icon">🍔</span>
         <span class="brand-text">JJES <span class="brand-accent">Food Court</span></span>
     </div>
+    
     <div class="nav-links" id="navLinks">
+        <!-- ✅ Home Button (Always Visible) -->
+        <a href="#" class="nav-link" onclick="showSection('landingSection');return false">
+            <i class="fas fa-home"></i> Home
+        </a>
+        
+        <!-- ✅ Menu, Orders, Cart (Always Visible) -->
         <a href="#" class="nav-link" onclick="showSection('menuSection');return false">
             <i class="fas fa-utensils"></i> Menu
         </a>
@@ -45,10 +52,19 @@
             <i class="fas fa-shopping-cart"></i> Cart
             <span class="cart-badge" id="cartBadge">0</span>
         </a>
-        <button class="btn-logout" id="logoutBtn" onclick="handleLogout();return false">
-            <i class="fas fa-sign-out-alt"></i> Logout
-        </button>
+        
+        <!-- 🔧 Auth Buttons: Toggle Login/Logout -->
+        <span id="authButtons">
+            <button class="btn-logout" id="loginNavBtn" onclick="showSection('loginSection');return false" style="display:none;">
+                <i class="fas fa-sign-in-alt"></i> Log In
+            </button>
+            <button class="btn-logout" id="logoutNavBtn" onclick="handleLogout();return false" style="display:none;">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </span>
     </div>
+    
+    <!-- User Greeting (shown when logged in) -->
     <div class="user-greeting" id="userGreeting"></div>
 </nav>
 
@@ -271,7 +287,7 @@
                 <div class="form-group">
                     <label><i class="fas fa-credit-card"></i> Payment Method</label>
                     <div class="payment-methods">
-                        <!-- 🔧 Cash Option -->
+                        <!-- Cash Option -->
                         <label class="payment-option">
                             <input type="radio" name="payment_method" value="cash" checked onchange="togglePaymentDetails('cash')">
                             <div class="payment-card">
@@ -280,7 +296,7 @@
                             </div>
                         </label>
 
-                        <!-- 🔧 NEW: Cash on Delivery Option -->
+                        <!-- Cash on Delivery Option -->
                         <label class="payment-option">
                             <input type="radio" name="payment_method" value="cash_on_delivery" onchange="togglePaymentDetails('cash_on_delivery')">
                             <div class="payment-card">
@@ -292,7 +308,7 @@
                             </div>
                         </label>
 
-                        <!-- 🔧 E-Wallet Options -->
+                        <!-- E-Wallet Options -->
                         <label class="payment-option">
                             <input type="radio" name="payment_method" value="gcash" onchange="togglePaymentDetails('gcash')">
                             <div class="payment-card">
@@ -317,14 +333,14 @@
                     </div>
                 </div>
 
-                <!-- 🔧 Payment Details Display Box -->
+                <!-- Payment Details Display Box -->
                 <div id="paymentDetails" class="payment-details-box">
                     <!-- Cash Details -->
                     <div id="cashDetails" class="payment-detail active">
                         <div class="alert alert-info"><i class="fas fa-info-circle"></i> <strong>Cash (Pickup):</strong> Pay upon pickup/delivery.</div>
                     </div>
 
-                    <!-- 🔧 NEW: COD Details -->
+                    <!-- COD Details -->
                     <div id="cash_on_deliveryDetails" class="payment-detail hidden">
                         <div class="alert alert-success">
                             <i class="fas fa-truck"></i> <strong>Cash on Delivery:</strong> 

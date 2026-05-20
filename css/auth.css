@@ -5,18 +5,19 @@
 
 /* ===== Auth Layout - COMPACT & CENTERED ===== */
 .auth-wrapper {
-    min-height: auto;  /* ← KEY CHANGE: Makes it compact! */
+    min-height: auto;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 40px 20px;
     background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+    overflow-y: auto; /* ✅ FIX: Allows scrolling on small screens */
 }
 
 .auth-container {
     display: flex;
     width: 100%;
-    max-width: 800px; /* Reduced from 1100px */
+    max-width: 850px; /* ✅ Increased slightly for better breathing room */
     background: white;
     border-radius: 20px;
     overflow: hidden;
@@ -26,8 +27,9 @@
 .auth-branding {
     flex: 1;
     background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    padding: 40px 30px; /* Reduced from 60px 40px */
+    padding: 40px 30px;
     display: flex;
+    flex-direction: column; /* ✅ FIX: Ensures items stack vertically */
     align-items: center;
     justify-content: center;
     color: white;
@@ -35,32 +37,32 @@
 }
 
 .brand-logo-large {
-    font-size: 60px; /* Reduced from 80px */
+    font-size: 60px;
     margin-bottom: 15px;
     animation: float 3s ease-in-out infinite;
 }
 
 @keyframes float {
     0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-20px); }
+    50% { transform: translateY(-15px); }
 }
 
 .auth-branding h1 {
-    font-size: 26px; /* Reduced from 32px */
+    font-size: 26px;
     margin: 0 0 12px;
     font-weight: 800;
     font-family: var(--heading);
 }
 
 .auth-branding p {
-    font-size: 14px; /* Reduced from 16px */
+    font-size: 14px;
     margin-bottom: 25px;
     opacity: 0.95;
 }
 
 .features-list {
     text-align: left;
-    max-width: 250px; /* Reduced from 280px */
+    max-width: 250px;
     margin: 0 auto;
 }
 
@@ -76,9 +78,10 @@
     font-size: 18px;
 }
 
+/* ===== Form Side ===== */
 .auth-form-wrapper {
     flex: 1;
-    padding: 40px 35px; /* Reduced from 60px 40px */
+    padding: 40px 35px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -87,27 +90,27 @@
 
 .auth-card {
     width: 100%;
-    max-width: 360px; /* Reduced from 400px */
+    max-width: 380px;
 }
 
 .auth-header {
     text-align: center;
-    margin-bottom: 25px; /* Reduced from 30px */
+    margin-bottom: 25px;
 }
 
 .auth-icon {
-    font-size: 40px; /* Reduced from 48px */
+    font-size: 40px;
     margin-bottom: 12px;
     animation: bounce 2s infinite;
 }
 
 @keyframes bounce {
     0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
+    50% { transform: translateY(-8px); }
 }
 
 .auth-header h2 {
-    font-size: 24px; /* Reduced from 28px */
+    font-size: 24px;
     color: var(--dark);
     margin: 0 0 8px;
     font-weight: 700;
@@ -116,21 +119,21 @@
 
 .auth-header p {
     color: var(--muted);
-    font-size: 13px; /* Reduced from 14px */
+    font-size: 13px;
     margin: 0;
 }
 
-/* ===== Forms - Compact ===== */
+/* ===== Forms ===== */
 .form-group {
-    margin-bottom: 16px; /* Reduced from 20px */
+    margin-bottom: 16px;
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 6px; /* Reduced from 8px */
+    margin-bottom: 6px;
     color: var(--text);
     font-weight: 600;
-    font-size: 13px; /* Reduced from 14px */
+    font-size: 13px;
     font-family: var(--heading);
 }
 
@@ -141,10 +144,10 @@
 
 .form-input {
     width: 100%;
-    padding: 11px 14px; /* Reduced from 14px 16px */
+    padding: 12px 14px;
     border: 2px solid #e0e0e0;
-    border-radius: 12px; /* Reduced from 14px */
-    font-size: 14px; /* Reduced from 15px */
+    border-radius: 12px;
+    font-size: 14px;
     transition: all 0.3s;
     background: white;
     font-family: var(--body);
@@ -153,7 +156,7 @@
 .form-input:focus {
     outline: none;
     border-color: var(--gold);
-    box-shadow: 0 0 0 4px rgba(255,193,7,0.1); /* Tighter shadow */
+    box-shadow: 0 0 0 4px rgba(255,193,7,0.15);
 }
 
 .input-password-wrap {
@@ -161,7 +164,7 @@
 }
 
 .input-password-wrap .form-input {
-    padding-right: 45px; /* Reduced from 50px */
+    padding-right: 45px;
 }
 
 .toggle-password {
@@ -185,8 +188,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px; /* Reduced from 25px */
-    font-size: 13px; /* Reduced from 14px */
+    margin-bottom: 20px;
+    font-size: 13px;
 }
 
 .remember-me {
@@ -199,11 +202,12 @@
 
 .remember-me input {
     width: 16px;
-    height: 8px;
+    height: 16px; /* ✅ FIX: Made checkbox square (was 8px) */
     accent-color: var(--gold);
     cursor: pointer;
 }
 
+/* Links */
 .forgot-password,
 .link-primary,
 .link-secondary {
@@ -220,12 +224,13 @@
     text-decoration: underline;
 }
 
-.link-primary { color: var(--error) !important; }
+/* ✅ FIX: Changed to Brand Color instead of Red */
+.link-primary { color: var(--gold-dark) !important; } 
 
-/* ===== Divider & Links ===== */
+/* ===== Divider ===== */
 .auth-divider {
     text-align: center;
-    margin: 20px 0; /* Reduced from 25px 0 */
+    margin: 20px 0;
     position: relative;
 }
 
@@ -243,22 +248,22 @@
     background: var(--gray);
     padding: 0 15px;
     color: var(--muted);
-    font-size: 13px; /* Reduced from 14px */
+    font-size: 13px;
     position: relative;
     z-index: 1;
 }
 
 .auth-switch {
     text-align: center;
-    font-size: 13px; /* Reduced from 14px */
+    font-size: 13px;
     color: var(--muted);
-    margin: 10px 0 0; /* Reduced from 12px 0 0 */
+    margin: 10px 0 0;
 }
 
 /* ===== Payment Methods ===== */
 .payment-methods {
     display: grid;
-    gap: 10px; /* Reduced from 12px */
+    gap: 10px;
     margin: 10px 0;
 }
 
@@ -278,9 +283,9 @@
 
 .payment-card {
     flex: 1;
-    padding: 10px 14px; /* Reduced from 12px 16px */
+    padding: 10px 14px;
     border: 2px solid #e0e0e0;
-    border-radius: 12px; /* Reduced from 14px */
+    border-radius: 12px;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -295,7 +300,7 @@
 }
 
 .payment-card i {
-    font-size: 20px; /* Reduced from 24px */
+    font-size: 20px;
     width: 20px;
     color: var(--gold-dark);
 }
@@ -308,13 +313,13 @@
 
 .payment-card small {
     color: var(--muted);
-    font-size: 11px; /* Reduced from 12px */
+    font-size: 11px;
     display: block;
 }
 
 .payment-details-box {
-    margin: 12px 0; /* Reduced from 15px 0 */
-    padding: 12px; /* Reduced from 15px */
+    margin: 12px 0;
+    padding: 12px;
     background: #fff9e6;
     border-radius: 12px;
     border-left: 4px solid var(--gold);
@@ -328,21 +333,21 @@
 .checkout-layout {
     display: grid;
     grid-template-columns: 1.4fr 1fr;
-    gap: 25px; /* Reduced from 30px */
+    gap: 25px;
     align-items: start;
 }
 
 .checkout-form-card {
     background: white;
-    padding: 30px; /* Reduced from 35px */
-    border-radius: 20px; /* Reduced from 24px */
+    padding: 30px;
+    border-radius: 20px;
     box-shadow: var(--shadow);
 }
 
 .order-summary-card {
     background: white;
-    padding: 30px; /* Reduced from 35px */
-    border-radius: 20px; /* Reduced from 24px */
+    padding: 30px;
+    border-radius: 20px;
     box-shadow: var(--shadow);
     position: sticky;
     top: 90px;
@@ -364,7 +369,7 @@
     justify-content: space-between;
     padding: 8px 0;
     border-bottom: 1px solid #eee;
-    font-size: 13px; /* Reduced from 14px */
+    font-size: 13px;
 }
 
 .checkout-total {
@@ -372,22 +377,22 @@
     justify-content: space-between;
     padding-top: 12px;
     border-top: 2px solid var(--gold);
-    font-size: 1.1rem; /* Reduced from 1.2rem */
+    font-size: 1.1rem;
     font-weight: 700;
 }
 
 /* ===== Order Type Toggle ===== */
 .order-type-toggle {
     display: flex;
-    gap: 8px; /* Reduced from 10px */
-    margin-bottom: 15px; /* Reduced from 25px */
+    gap: 8px;
+    margin-bottom: 15px;
 }
 
 .toggle-btn {
     flex: 1;
-    padding: 10px; /* Reduced from 12px */
+    padding: 10px;
     border: 2px solid #e0e0e0;
-    border-radius: 12px; /* Reduced from 14px */
+    border-radius: 12px;
     background: white;
     font-weight: 600;
     cursor: pointer;
@@ -410,24 +415,29 @@
     border-color: var(--gold);
 }
 
-/* ===== Mobile Responsive for Auth ===== */
+/* ===== Mobile Responsive ===== */
 @media (max-width: 768px) {
     .auth-wrapper {
-        padding: 20px 15px; /* Reduced from 40px 20px */
+        padding: 20px 15px;
         background: var(--gold);
     }
     
     .auth-container {
         flex-direction: column;
-        border-radius: 16px; /* Reduced from 20px */
+        border-radius: 16px;
     }
     
     .auth-branding {
-        display: none; /* Hide branding on mobile */
+        padding: 30px 20px;
+        display: block; /* ✅ Kept visible but smaller on tablets */
     }
     
+    .brand-logo-large { font-size: 40px; margin-bottom: 10px; }
+    .auth-branding h1 { font-size: 20px; }
+    .features-list { display: none; /* Hide features on tablet */ }
+    
     .auth-form-wrapper {
-        padding: 30px 25px; /* Reduced from 30px 20px */
+        padding: 30px 25px;
         background: white;
     }
     
@@ -442,29 +452,29 @@
 
 @media (max-width: 480px) {
     .auth-wrapper {
-        padding: 15px 10px;
+        padding: 10px 10px;
+    }
+    
+    .auth-branding {
+        display: none; /* ✅ Hide branding on mobile to save space */
     }
     
     .auth-form-wrapper {
-        padding: 25px 20px;
+        padding: 25px 15px;
+        background: white;
     }
     
-    .auth-header h2 {
-        font-size: 20px; /* Reduced from 22px */
-    }
-    
-    .auth-icon {
-        font-size: 36px; /* Reduced from 40px */
-    }
+    .auth-header h2 { font-size: 20px; }
+    .auth-icon { font-size: 30px; }
     
     .form-input {
         padding: 10px 12px;
-        font-size: 15px; /* Keep at 15px to prevent iOS zoom */
+        font-size: 16px; /* ✅ iOS Zoom Fix */
     }
     
     .btn-primary {
-        padding: 11px 20px;
-        font-size: 14px;
+        padding: 12px 20px;
+        font-size: 15px;
     }
 }
 
@@ -476,13 +486,8 @@
         background: var(--dark-2);
     }
     
-    .auth-header h2 {
-        color: white;
-    }
-    
-    .auth-header p {
-        color: #aaa;
-    }
+    .auth-header h2 { color: white; }
+    .auth-header p { color: #aaa; }
     
     .form-input {
         background: var(--dark);
@@ -494,13 +499,8 @@
         border-color: var(--gold);
     }
     
-    .form-group label {
-        color: #ddd;
-    }
-    
-    .auth-form-wrapper {
-        background: var(--dark);
-    }
+    .form-group label { color: #ddd; }
+    .auth-form-wrapper { background: var(--dark); }
     
     .payment-card {
         background: var(--dark);

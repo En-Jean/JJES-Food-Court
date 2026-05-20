@@ -1,5 +1,5 @@
 // =====================================================
-// JJES Food Court - FINAL JavaScript (With COD)
+// JJES Food Court - FINAL JavaScript (Production Ready)
 // =====================================================
 
 // Global Variables
@@ -9,9 +9,9 @@ let menuItems = [];
 let currentOrderType = 'dine-in';
 let currentPaymentMethod = 'cash';
 
-// 🔧 API URL - Adjust based on your folder structure
-// From: frontend/js/main.js → go up 2 folders → backend/
-const API_URL = 'http://localhost/JJES-FOOD-COURT/backend';
+// 🔧 API URL - Use relative path for localhost & live server
+const API_URL =  'http://localhost/JJES-FOOD-COURT/backend';
+// OR use absolute for testing: 'http://localhost/JJES-FOOD-COURT/backend'
 
 // =====================================================
 // INITIALIZATION
@@ -51,33 +51,40 @@ function setupEventListeners() {
 }
 
 // =====================================================
-// AUTHENTICATION
+// AUTHENTICATION - UPDATED NAVBAR LOGIC
 // =====================================================
 function checkAuthStatus() {
     const user = localStorage.getItem('currentUser');
     if (user) {
         try {
             currentUser = JSON.parse(user);
-            updateNavbar();
         } catch (e) {
             console.error('Failed to parse user:', e);
             localStorage.removeItem('currentUser');
+            currentUser = null;
         }
     }
+    // Always call to set correct initial state
+    updateNavbar();
 }
 
 function updateNavbar() {
-    const navLinks = document.getElementById('navLinks');
+    const loginNavBtn = document.getElementById('loginNavBtn');
+    const logoutNavBtn = document.getElementById('logoutNavBtn');
     const userGreeting = document.getElementById('userGreeting');
     
     if (currentUser) {
-        if (navLinks) navLinks.style.display = 'flex';
+        // ✅ User is logged in: Show Logout + Greeting, Hide Login
+        if (loginNavBtn) loginNavBtn.style.display = 'none';
+        if (logoutNavBtn) logoutNavBtn.style.display = 'flex';
         if (userGreeting) {
             userGreeting.textContent = `Hello, ${currentUser.name}!`;
             userGreeting.style.display = 'block';
         }
     } else {
-        if (navLinks) navLinks.style.display = 'none';
+        // ❌ User is NOT logged in: Show Login, Hide Logout + Greeting
+        if (loginNavBtn) loginNavBtn.style.display = 'flex';
+        if (logoutNavBtn) logoutNavBtn.style.display = 'none';
         if (userGreeting) userGreeting.style.display = 'none';
     }
 }
@@ -450,7 +457,7 @@ function proceedToCheckout() {
 }
 
 // =====================================================
-// CHECKOUT & PAYMENT
+// CHECKOUT & PAYMENT - WITH COD SUPPORT
 // =====================================================
 function togglePaymentDetails(method) {
     currentPaymentMethod = method;
