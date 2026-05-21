@@ -1,15 +1,27 @@
 <?php
-// ============================================================
-// db_connect.php
-// PURPOSE: Connect to the MySQL database using mysqli
-// This file is included by all other PHP files
-// ============================================================
+ini_set('session.cookie_secure',   '1');
+ini_set('session.cookie_httponly', '1');
+ini_set('session.cookie_samesite', 'Lax');
 
-// --- Database Configuration ---
-$host     = "localhost";   // XAMPP default host
-$username = "root";        // XAMPP default username
-$password = "";            // XAMPP default password (empty)
-$database = "jjes_foodcourt";
+// Railway provides MYSQL_URL in the format:
+// mysql://user:password@host:port/database
+$url = getenv('MYSQL_URL') ?: getenv('MYSQL_PUBLIC_URL') ?: null;
+
+if ($url) {
+    $parts = parse_url($url);
+    $host  = $parts['host'];
+    $port  = $parts['port'] ?? 3306;
+    $user  = $parts['user'];
+    $pass  = $parts['pass'];
+    $db    = ltrim($parts['path'], '/');
+} else {
+    // Local fallback
+    $host = getenv('MYSQLHOST')     ?: 'localhost';
+    $port = getenv('MYSQLPORT')     ?: '3306';
+    $db   = getenv('MYSQLDATABASE') ?: 'railway';
+    $user = getenv('MYSQLUSER')     ?: 'root';
+    $pass = getenv('MYSQLPASSWORD') ?: '';
+}
 
 // --- Create Connection ---
 $conn = new mysqli($host, $username, $password, $database);
