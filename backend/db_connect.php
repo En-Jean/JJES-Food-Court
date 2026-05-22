@@ -1,10 +1,9 @@
 <?php
-ini_set('session.cookie_secure',   '1');
-ini_set('session.cookie_httponly', '1');
-ini_set('session.cookie_samesite', 'Lax');
+// ============================================================
+// db_connect.php - PDO Database Connection for Railway
+// ============================================================
 
-// Railway provides MYSQL_URL in the format:
-// mysql://user:password@host:port/database
+// Railway provides MYSQL_URL or individual env vars
 $url = getenv('MYSQL_URL') ?: getenv('MYSQL_PUBLIC_URL') ?: null;
 
 if ($url) {
@@ -12,10 +11,10 @@ if ($url) {
     $host  = $parts['host'];
     $port  = $parts['port'] ?? 3306;
     $user  = $parts['user'];
-    $pass  = $parts['pass'];
+    $pass  = rawurldecode($parts['pass']);
     $db    = ltrim($parts['path'], '/');
 } else {
-    // Local fallback
+    // Fallback to individual Railway env vars
     $host = getenv('MYSQLHOST')     ?: 'localhost';
     $port = getenv('MYSQLPORT')     ?: '3306';
     $db   = getenv('MYSQLDATABASE') ?: 'railway';
@@ -23,22 +22,21 @@ if ($url) {
     $pass = getenv('MYSQLPASSWORD') ?: '';
 }
 
-// --- Create Connection ---
-$conn = new mysqli($host, $username, $password, $database);
-
-// --- Check if Connection Failed ---
-if ($conn->connect_error) {
-    // Return error as JSON so JavaScript can read it
+// --- Create PDO Connection ---
+try {
+    $dsn = "mysql:host={$host};port={$port};dbname={$db};charset=utf8mb4";
+    $pdo = new PDO($dsn, $user, $pass, [
+        PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::ATTR_EMULATE_PREPARES   => false,
+    ]);
+} catch (PDOException $e) {
     header('Content-Type: application/json');
+    http_response_code(500);
     echo json_encode([
         "success" => false,
-        "message" => "Database connection failed: " . $conn->connect_error
+        "message" => "Database connection failed: " . $e->getMessage()
     ]);
-    exit(); // Stop the script if we can't connect
+    exit();
 }
-
-// --- Set Character Encoding to UTF-8 ---
-$conn->set_charset("utf8");
-
-// Connection is now available as $conn in any file that includes this
 ?>

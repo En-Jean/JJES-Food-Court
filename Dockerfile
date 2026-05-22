@@ -6,5 +6,5 @@ RUN install-php-extensions pdo pdo_mysql mysqli mbstring
 # Copy project files
 COPY . /app
 
-# Start FrankenPHP listening on Railway's assigned port
-CMD frankenphp php-server --listen :${PORT:-80} --root /app
+# Use shell form so $PORT is expanded from Railway's env var
+CMD frankenphp php-server --listen :${PORT:-8080} --root /app

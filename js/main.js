@@ -9,9 +9,8 @@ let menuItems = [];
 let currentOrderType = 'dine-in';
 let currentPaymentMethod = 'cash';
 
-// 🔧 API URL - Use relative path for localhost & live server
-const API_URL =  'http://localhost/JJES-FOOD-COURT/backend';
-// OR use absolute for testing: 'http://localhost/JJES-FOOD-COURT/backend'
+// API URL - relative path works on Railway and any deployment
+const API_URL = '/backend';
 
 // =====================================================
 // INITIALIZATION
